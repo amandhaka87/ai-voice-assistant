@@ -9,37 +9,43 @@ interface RobotProps {
 
 const variantMap = {
     openai: {
+        robot: styles.robotOpenai,
         head: styles.headOpenai,
         eye: styles.eyeOpenai,
-        antennaTip: styles.antennaTipOpenai,
-        body: styles.bodyOpenai,
-        chestLight: styles.chestLightOpenai,
-        bar: styles.barOpenai,
-        arm: styles.armOpenai,
-        leg: styles.legOpenai,
+        pupil: styles.pupilOpenai,
+        cheek: styles.cheekOpenai,
         mouth: styles.mouthOpenai,
+        earTip: styles.earTipOpenai,
+        body: styles.bodyOpenai,
+        belly: styles.bellyOpenai,
+        arm: styles.armOpenai,
+        foot: styles.footOpenai,
     },
     gemini: {
+        robot: styles.robotGemini,
         head: styles.headGemini,
         eye: styles.eyeGemini,
-        antennaTip: styles.antennaTipGemini,
-        body: styles.bodyGemini,
-        chestLight: styles.chestLightGemini,
-        bar: styles.barGemini,
-        arm: styles.armGemini,
-        leg: styles.legGemini,
+        pupil: styles.pupilGemini,
+        cheek: styles.cheekGemini,
         mouth: styles.mouthGemini,
+        earTip: styles.earTipGemini,
+        body: styles.bodyGemini,
+        belly: styles.bellyGemini,
+        arm: styles.armGemini,
+        foot: styles.footGemini,
     },
     claude: {
+        robot: styles.robotClaude,
         head: styles.headClaude,
         eye: styles.eyeClaude,
-        antennaTip: styles.antennaTipClaude,
-        body: styles.bodyClaude,
-        chestLight: styles.chestLightClaude,
-        bar: styles.barClaude,
-        arm: styles.armClaude,
-        leg: styles.legClaude,
+        pupil: styles.pupilClaude,
+        cheek: styles.cheekClaude,
         mouth: styles.mouthClaude,
+        earTip: styles.earTipClaude,
+        body: styles.bodyClaude,
+        belly: styles.bellyClaude,
+        arm: styles.armClaude,
+        foot: styles.footClaude,
     },
 };
 
@@ -47,47 +53,52 @@ export default function Robot({ variant, isTalking = false }: RobotProps) {
     const v = variantMap[variant];
 
     return (
-        <div className={styles.robot}>
-            {/* Head */}
+        <div className={`${styles.robot} ${v.robot}`}>
+            {/* Head (oversized, cute) */}
             <div className={`${styles.head} ${v.head}`}>
-                {/* Antenna */}
-                <div className={styles.antenna}>
-                    <div className={`${styles.antennaTip} ${v.antennaTip}`} />
+                {/* Ears */}
+                <div className={`${styles.earLeft}`}>
+                    <div className={`${styles.earTip} ${v.earTip}`} />
                 </div>
-                {/* Eyes */}
-                <div className={`${styles.eye} ${v.eye} ${isTalking ? styles.eyeActive : ""}`} />
-                <div className={`${styles.eye} ${v.eye} ${isTalking ? styles.eyeActive : ""}`} />
+                <div className={`${styles.earRight}`}>
+                    <div className={`${styles.earTip} ${v.earTip}`} />
+                </div>
+
+                {/* Face area */}
+                <div className={styles.face}>
+                    {/* Eyes (big, adorable) */}
+                    <div className={`${styles.eye} ${v.eye} ${isTalking ? styles.eyeActive : ""}`}>
+                        <div className={`${styles.pupil} ${v.pupil}`} />
+                        <div className={styles.eyeShine} />
+                    </div>
+                    <div className={`${styles.eye} ${v.eye} ${isTalking ? styles.eyeActive : ""}`}>
+                        <div className={`${styles.pupil} ${v.pupil}`} />
+                        <div className={styles.eyeShine} />
+                    </div>
+                </div>
+
+                {/* Cheeks */}
+                <div className={`${styles.cheek} ${styles.cheekLeft} ${v.cheek}`} />
+                <div className={`${styles.cheek} ${styles.cheekRight} ${v.cheek}`} />
+
                 {/* Mouth */}
-                <div
-                    className={`${styles.mouth} ${v.mouth} ${isTalking ? styles.mouthTalking : ""
-                        }`}
-                />
+                <div className={`${styles.mouth} ${v.mouth} ${isTalking ? styles.mouthTalking : ""}`} />
             </div>
 
-            {/* Neck */}
-            <div className={styles.neck} />
-
-            {/* Body */}
+            {/* Tiny body */}
             <div className={`${styles.body} ${v.body}`}>
                 {/* Arms */}
                 <div className={`${styles.armLeft} ${v.arm} ${isTalking ? styles.armTalking : ""}`} />
                 <div className={`${styles.armRight} ${v.arm} ${isTalking ? styles.armTalking : ""}`} />
 
-                {/* Chest Light */}
-                <div className={`${styles.chestLight} ${v.chestLight} ${isTalking ? styles.chestLightTalking : ""}`} />
-
-                {/* LED Bars */}
-                <div className={styles.chestBars}>
-                    {[0, 1, 2, 3, 4].map((i) => (
-                        <div key={i} className={`${styles.chestBar} ${v.bar} ${isTalking ? styles.barTalking : ""}`} />
-                    ))}
-                </div>
+                {/* Belly light */}
+                <div className={`${styles.belly} ${v.belly} ${isTalking ? styles.bellyTalking : ""}`} />
             </div>
 
-            {/* Legs */}
-            <div className={styles.legs}>
-                <div className={`${styles.leg} ${v.leg}`} />
-                <div className={`${styles.leg} ${v.leg}`} />
+            {/* Tiny feet */}
+            <div className={styles.feet}>
+                <div className={`${styles.foot} ${v.foot}`} />
+                <div className={`${styles.foot} ${v.foot}`} />
             </div>
 
             {/* Shadow */}
