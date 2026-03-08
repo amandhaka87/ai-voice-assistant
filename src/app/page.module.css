@@ -1,0 +1,236 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-size: 3.5rem;
+  margin-bottom: 4rem;
+  text-align: center;
+  color: #fff;
+  animation: titleGlow 3s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.grid {
+  display: flex;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  position: relative;
+  width: 340px;
+  background: rgba(16, 20, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  animation: float 6s ease-in-out infinite;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-20px) scale(1.05);
+  background: rgba(20, 25, 45, 0.9);
+  border-color: transparent;
+}
+
+.card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.card:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+.card:nth-child(3) {
+  animation-delay: 3s;
+}
+
+/* Analytical Card Styles */
+.cardAnalytical:hover {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.cardAnalytical:hover::before {
+  background: linear-gradient(135deg, var(--neon-cyan), transparent);
+  opacity: 1;
+}
+
+/* Creative Card Styles */
+.cardCreative:hover {
+  box-shadow: 0 0 40px rgba(255, 0, 60, 0.25), inset 0 0 20px rgba(255, 0, 60, 0.1);
+}
+
+.cardCreative:hover::before {
+  background: linear-gradient(135deg, var(--neon-magenta), transparent);
+  opacity: 1;
+}
+
+/* Companion Card Styles */
+.cardCompanion:hover {
+  box-shadow: 0 0 40px rgba(255, 170, 0, 0.25), inset 0 0 20px rgba(255, 170, 0, 0.1);
+}
+
+.cardCompanion:hover::before {
+  background: linear-gradient(135deg, var(--neon-orange), transparent);
+  opacity: 1;
+}
+
+.imageWrapper {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.5s ease;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cardAnalytical:hover .imageWrapper {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+}
+
+.cardCreative:hover .imageWrapper {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
+}
+
+.cardCompanion:hover .imageWrapper {
+  border-color: var(--neon-orange);
+  box-shadow: 0 0 30px rgba(255, 170, 0, 0.5);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover .image {
+  transform: scale(1.15) rotate(2deg);
+}
+
+.name {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  color: var(--text-light);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.cardAnalytical:hover .name {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+.cardCreative:hover .name {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 15px rgba(255, 0, 60, 0.6);
+}
+
+.cardCompanion:hover .name {
+  color: var(--neon-orange);
+  text-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+}
+
+.role {
+  font-size: 1rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+}
+
+.card:hover .role {
+  color: #fff;
+}
+
+.status {
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+}
+
+.cardAnalytical:hover .status {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.cardCreative:hover .status {
+  background: rgba(255, 0, 60, 0.15);
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+}
+
+.cardCompanion:hover .status {
+  background: rgba(255, 170, 0, 0.15);
+  border-color: var(--neon-orange);
+  color: var(--neon-orange);
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+}
+
+.bgGrid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center auto;
+  z-index: 0;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at top center, black 10%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at top center, black 10%, transparent 80%);
+}

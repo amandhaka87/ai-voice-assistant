@@ -1,0 +1,52 @@
+:root {
+  --neon-cyan: #00f0ff;
+  --neon-magenta: #ff003c;
+  --neon-purple: #9d00ff;
+  --neon-orange: #ffaa00;
+  --bg-deep: #050505;
+  --bg-dark: #0a0a0f;
+  --text-light: #e0e6ed;
+  --text-dim: #8b9bb4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at center, #111424 0%, var(--bg-deep) 100%);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.8); }
+  100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+}
+
+@keyframes titleGlow {
+  0% { text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0,240,255,0.5); }
+  50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(0,240,255,0.8); }
+  100% { text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0,240,255,0.5); }
+}
+
+/* Base Styles */
+h1 {
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
