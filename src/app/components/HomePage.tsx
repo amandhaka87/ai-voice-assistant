@@ -78,6 +78,8 @@ export default function HomePage() {
     } = useSpeechRecognition();
     const sfx = useSoundEffects();
 
+    const [showHelp, setShowHelp] = useState(false);
+
     const [isLoading, setIsLoading] = useState(false);
     const [chatLog, setChatLog] = useState<{ role: "user" | "ai"; text: string }[]>([]);
     const [error, setError] = useState("");
@@ -195,12 +197,12 @@ export default function HomePage() {
                         <input
                             type="password"
                             className={`${styles.apiInput} ${detectedProvider === "openai"
-                                    ? styles.inputGlowOpenai
-                                    : detectedProvider === "gemini"
-                                        ? styles.inputGlowGemini
-                                        : detectedProvider === "claude"
-                                            ? styles.inputGlowClaude
-                                            : ""
+                                ? styles.inputGlowOpenai
+                                : detectedProvider === "gemini"
+                                    ? styles.inputGlowGemini
+                                    : detectedProvider === "claude"
+                                        ? styles.inputGlowClaude
+                                        : ""
                                 }`}
                             placeholder="Paste your API key here (sk-..., AIza..., sk-ant-...)"
                             value={apiKey}
@@ -211,10 +213,10 @@ export default function HomePage() {
                         {detectedProvider && (
                             <div
                                 className={`${styles.detectedBadge} ${detectedProvider === "openai"
-                                        ? styles.badgeOpenai
-                                        : detectedProvider === "gemini"
-                                            ? styles.badgeGemini
-                                            : styles.badgeClaude
+                                    ? styles.badgeOpenai
+                                    : detectedProvider === "gemini"
+                                        ? styles.badgeGemini
+                                        : styles.badgeClaude
                                     }`}
                             >
                                 {detectedProvider === "openai"
@@ -230,6 +232,72 @@ export default function HomePage() {
                             Unrecognized key format. Supported: OpenAI (sk-), Gemini (AIza), Claude (sk-ant-)
                         </p>
                     )}
+                    {!detectedProvider && (
+                        <button
+                            className={styles.helpToggle}
+                            onClick={() => setShowHelp(!showHelp)}
+                        >
+                            {showHelp ? "✕ Close" : "? Where do I get an API key?"}
+                        </button>
+                    )}
+                    {showHelp && !detectedProvider && (
+                        <div className={styles.helpPanel}>
+                            <h3 className={styles.helpTitle}>Get your free API key</h3>
+                            <div className={styles.helpCards}>
+                                <a
+                                    href="https://platform.openai.com/api-keys"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${styles.helpCard} ${styles.helpCardOpenai}`}
+                                >
+                                    <span className={styles.helpCardIcon}>🟢</span>
+                                    <span className={styles.helpCardName}>OpenAI</span>
+                                    <span className={styles.helpCardSteps}>
+                                        1. Sign up at platform.openai.com<br />
+                                        2. Go to API Keys<br />
+                                        3. Click &quot;Create new secret key&quot;<br />
+                                        4. Copy key starting with <strong>sk-</strong>
+                                    </span>
+                                    <span className={styles.helpCardLink}>Get Key →</span>
+                                </a>
+                                <a
+                                    href="https://aistudio.google.com/apikey"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${styles.helpCard} ${styles.helpCardGemini}`}
+                                >
+                                    <span className={styles.helpCardIcon}>🔵</span>
+                                    <span className={styles.helpCardName}>Google Gemini</span>
+                                    <span className={styles.helpCardSteps}>
+                                        1. Go to aistudio.google.com<br />
+                                        2. Click &quot;Get API key&quot;<br />
+                                        3. Create key in a project<br />
+                                        4. Copy key starting with <strong>AIza</strong>
+                                    </span>
+                                    <span className={styles.helpCardLink}>Get Key →</span>
+                                </a>
+                                <a
+                                    href="https://console.anthropic.com/settings/keys"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${styles.helpCard} ${styles.helpCardClaude}`}
+                                >
+                                    <span className={styles.helpCardIcon}>🟠</span>
+                                    <span className={styles.helpCardName}>Anthropic Claude</span>
+                                    <span className={styles.helpCardSteps}>
+                                        1. Sign up at console.anthropic.com<br />
+                                        2. Go to Settings → API Keys<br />
+                                        3. Click &quot;Create Key&quot;<br />
+                                        4. Copy key starting with <strong>sk-ant-</strong>
+                                    </span>
+                                    <span className={styles.helpCardLink}>Get Key →</span>
+                                </a>
+                            </div>
+                            <p className={styles.helpNote}>
+                                🔒 Your API key is never stored. It&apos;s only sent to the AI provider during your session.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <div className={`${styles.gridWrapper} ${!isIdle ? styles.gridActivated : ""}`}>
@@ -243,8 +311,8 @@ export default function HomePage() {
                                 <div
                                     key={agent.id}
                                     className={`${styles.card} ${agent.styleClass} ${isActive
-                                            ? `${styles.cardActivated} ${positionActiveClass[agent.position]}`
-                                            : ""
+                                        ? `${styles.cardActivated} ${positionActiveClass[agent.position]}`
+                                        : ""
                                         } ${isFaded ? `${styles.cardFaded} ${positionFadedClass[agent.position]}` : ""}`}
                                 >
                                     <div className={styles.robotWrapper}>
@@ -311,12 +379,12 @@ export default function HomePage() {
                         {/* Mic Button */}
                         <button
                             className={`${styles.micButton} ${isListening
-                                    ? styles.micListening
-                                    : isSpeaking
-                                        ? styles.micSpeaking
-                                        : isLoading
-                                            ? styles.micLoading
-                                            : ""
+                                ? styles.micListening
+                                : isSpeaking
+                                    ? styles.micSpeaking
+                                    : isLoading
+                                        ? styles.micLoading
+                                        : ""
                                 }`}
                             onClick={handleMicClick}
                             disabled={!isSupported}
