@@ -1,30 +1,30 @@
-import Image from "next/image";
 import styles from "./page.module.css";
+import Robot from "./components/Robot";
 
 const agents = [
   {
-    id: "analytical",
-    name: "A.R.I.S.",
-    role: "Logical processes, data analysis, and structural organization.",
-    image: "/images/analytical.png",
+    id: "openai",
+    name: "OpenAI",
+    role: "Advanced reasoning, code generation, and creative writing.",
     status: "Online",
-    styleClass: styles.cardAnalytical,
+    variant: "openai" as const,
+    styleClass: styles.cardOpenai,
   },
   {
-    id: "creative",
-    name: "N.O.V.A.",
-    role: "Design, brainstorming, and visionary thinking.",
-    image: "/images/creative.png",
+    id: "gemini",
+    name: "Gemini",
+    role: "Multimodal intelligence, search integration, and deep analysis.",
     status: "Ready",
-    styleClass: styles.cardCreative,
+    variant: "gemini" as const,
+    styleClass: styles.cardGemini,
   },
   {
-    id: "companion",
-    name: "L.U.M.I.",
-    role: "Empathetic interaction, emotional support, and friendly chatter.",
-    image: "/images/companion.png",
+    id: "claude",
+    name: "Claude",
+    role: "Thoughtful conversation, safety-first design, and detailed research.",
     status: "Active",
-    styleClass: styles.cardCompanion,
+    variant: "claude" as const,
+    styleClass: styles.cardClaude,
   },
 ];
 
@@ -38,15 +38,8 @@ export default function Home() {
         <div className={styles.grid}>
           {agents.map((agent) => (
             <div key={agent.id} className={`${styles.card} ${agent.styleClass}`}>
-              <div className={styles.imageWrapper}>
-                <Image
-                  src={agent.image}
-                  alt={agent.name}
-                  width={200}
-                  height={200}
-                  className={styles.image}
-                  priority
-                />
+              <div className={styles.robotWrapper}>
+                <Robot variant={agent.variant} />
               </div>
               <h2 className={styles.name}>{agent.name}</h2>
               <p className={styles.role}>{agent.role}</p>

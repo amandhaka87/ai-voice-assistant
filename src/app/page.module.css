@@ -81,74 +81,46 @@
   animation-delay: 3s;
 }
 
-/* Analytical Card Styles */
-.cardAnalytical:hover {
-  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+/* Robot Wrapper */
+.robotWrapper {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 210px;
 }
 
-.cardAnalytical:hover::before {
-  background: linear-gradient(135deg, var(--neon-cyan), transparent);
+/* ===== OpenAI Card ===== */
+.cardOpenai:hover {
+  box-shadow: 0 0 40px rgba(16, 163, 127, 0.3), inset 0 0 20px rgba(16, 163, 127, 0.1);
+}
+
+.cardOpenai:hover::before {
+  background: linear-gradient(135deg, #10a37f, transparent);
   opacity: 1;
 }
 
-/* Creative Card Styles */
-.cardCreative:hover {
-  box-shadow: 0 0 40px rgba(255, 0, 60, 0.25), inset 0 0 20px rgba(255, 0, 60, 0.1);
+/* ===== Gemini Card ===== */
+.cardGemini:hover {
+  box-shadow: 0 0 40px rgba(66, 133, 244, 0.3), inset 0 0 20px rgba(66, 133, 244, 0.1);
 }
 
-.cardCreative:hover::before {
-  background: linear-gradient(135deg, var(--neon-magenta), transparent);
+.cardGemini:hover::before {
+  background: linear-gradient(135deg, #4285f4, transparent);
   opacity: 1;
 }
 
-/* Companion Card Styles */
-.cardCompanion:hover {
-  box-shadow: 0 0 40px rgba(255, 170, 0, 0.25), inset 0 0 20px rgba(255, 170, 0, 0.1);
+/* ===== Claude Card ===== */
+.cardClaude:hover {
+  box-shadow: 0 0 40px rgba(224, 122, 74, 0.3), inset 0 0 20px rgba(224, 122, 74, 0.1);
 }
 
-.cardCompanion:hover::before {
-  background: linear-gradient(135deg, var(--neon-orange), transparent);
+.cardClaude:hover::before {
+  background: linear-gradient(135deg, #e07a4a, transparent);
   opacity: 1;
 }
 
-.imageWrapper {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.5s ease;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.cardAnalytical:hover .imageWrapper {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
-}
-
-.cardCreative:hover .imageWrapper {
-  border-color: var(--neon-magenta);
-  box-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
-}
-
-.cardCompanion:hover .imageWrapper {
-  border-color: var(--neon-orange);
-  box-shadow: 0 0 30px rgba(255, 170, 0, 0.5);
-}
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.card:hover .image {
-  transform: scale(1.15) rotate(2deg);
-}
-
+/* ===== Name ===== */
 .name {
   font-size: 1.8rem;
   font-weight: 800;
@@ -158,21 +130,22 @@
   letter-spacing: 1px;
 }
 
-.cardAnalytical:hover .name {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+.cardOpenai:hover .name {
+  color: #10a37f;
+  text-shadow: 0 0 15px rgba(16, 163, 127, 0.6);
 }
 
-.cardCreative:hover .name {
-  color: var(--neon-magenta);
-  text-shadow: 0 0 15px rgba(255, 0, 60, 0.6);
+.cardGemini:hover .name {
+  color: #4285f4;
+  text-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
 }
 
-.cardCompanion:hover .name {
-  color: var(--neon-orange);
-  text-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+.cardClaude:hover .name {
+  color: #e07a4a;
+  text-shadow: 0 0 15px rgba(224, 122, 74, 0.6);
 }
 
+/* ===== Role ===== */
 .role {
   font-size: 1rem;
   color: var(--text-dim);
@@ -185,6 +158,7 @@
   color: #fff;
 }
 
+/* ===== Status Badge ===== */
 .status {
   padding: 0.5rem 1.2rem;
   border-radius: 30px;
@@ -197,27 +171,28 @@
   transition: all 0.4s ease;
 }
 
-.cardAnalytical:hover .status {
-  background: rgba(0, 240, 255, 0.15);
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+.cardOpenai:hover .status {
+  background: rgba(16, 163, 127, 0.15);
+  border-color: #10a37f;
+  color: #10a37f;
+  box-shadow: 0 0 20px rgba(16, 163, 127, 0.4);
 }
 
-.cardCreative:hover .status {
-  background: rgba(255, 0, 60, 0.15);
-  border-color: var(--neon-magenta);
-  color: var(--neon-magenta);
-  box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+.cardGemini:hover .status {
+  background: rgba(66, 133, 244, 0.15);
+  border-color: #4285f4;
+  color: #4285f4;
+  box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
 }
 
-.cardCompanion:hover .status {
-  background: rgba(255, 170, 0, 0.15);
-  border-color: var(--neon-orange);
-  color: var(--neon-orange);
-  box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+.cardClaude:hover .status {
+  background: rgba(224, 122, 74, 0.15);
+  border-color: #e07a4a;
+  color: #e07a4a;
+  box-shadow: 0 0 20px rgba(224, 122, 74, 0.4);
 }
 
+/* ===== Background Grid ===== */
 .bgGrid {
   position: fixed;
   top: 0;
