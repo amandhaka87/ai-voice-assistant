@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import Robot from "./Robot";
 import IdleChat from "./IdleChat";
+import { useSpeech } from "../hooks/useSpeech";
 
 type Provider = "openai" | "gemini" | "claude" | null;
 
@@ -62,11 +63,23 @@ export default function HomePage() {
     const [apiKey, setApiKey] = useState("");
     const detectedProvider = useMemo(() => detectProvider(apiKey), [apiKey]);
     const isIdle = detectedProvider === null;
+    const { isSpeaking, isMouthOpen, speak, stopSpeaking } = useSpeech();
+    const prevProviderRef = useRef<Provider>(null);
+
+    // Auto-speak greeting when a new provider is detected
+    useEffect(() => {
+        if (detectedProvider && detectedProvider !== prevProviderRef.current) {
+            speak(detectedProvider);
+        }
+        if (!detectedProvider && prevProviderRef.current) {
+            stopSpeaking();
+        }
+        prevProviderRef.current = detectedProvider;
+    }, [detectedProvider, speak, stopSpeaking]);
 
     return (
         <>
             <div className={styles.bgGrid}></div>
-            {/* Cinematic vignette overlay when activated */}
             {!isIdle && <div className={styles.cinematicOverlay} />}
 
             <main className={styles.container}>
@@ -124,21 +137,21 @@ export default function HomePage() {
                         {agents.map((agent) => {
                             const isActive = detectedProvider === agent.id;
                             const isFaded = detectedProvider !== null && !isActive;
+                            const robotTalking = isActive && isSpeaking && isMouthOpen;
 
                             return (
                                 <div
                                     key={agent.id}
                                     className={`${styles.card} ${agent.styleClass} ${isActive ? `${styles.cardActivated} ${positionActiveClass[agent.position]}` : ""
-                                        } ${isFaded ? `${styles.cardFaded} ${positionFadedClass[agent.position]}` : ""
-                                        }`}
+                                        } ${isFaded ? `${styles.cardFaded} ${positionFadedClass[agent.position]}` : ""}`}
                                 >
                                     <div className={styles.robotWrapper}>
-                                        <Robot variant={agent.variant} />
+                                        <Robot variant={agent.variant} isTalking={isActive && isSpeaking} />
                                     </div>
                                     <h2 className={styles.name}>{agent.name}</h2>
                                     <p className={styles.role}>{agent.role}</p>
                                     <div className={`${styles.status} ${isActive ? styles.statusActivated : ""}`}>
-                                        {isActive ? "✦ Activated" : agent.status}
+                                        {isActive && isSpeaking ? "🔊 Speaking..." : isActive ? "✦ Activated" : agent.status}
                                     </div>
                                 </div>
                             );
