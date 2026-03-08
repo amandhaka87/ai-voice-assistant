@@ -57,7 +57,11 @@ export function useSpeechRecognition() {
             setIsListening(false);
         };
 
-        recognition.onerror = () => {
+        recognition.onerror = (e: any) => {
+            // "aborted" and "no-speech" are not real errors
+            if (e?.error !== "aborted" && e?.error !== "no-speech") {
+                console.warn("Speech recognition error:", e?.error);
+            }
             setIsListening(false);
         };
 
@@ -68,13 +72,22 @@ export function useSpeechRecognition() {
         if (!recognitionRef.current) return;
         setTranscript("");
         setInterimTranscript("");
-        recognitionRef.current.start();
-        setIsListening(true);
+        try {
+            recognitionRef.current.start();
+            setIsListening(true);
+        } catch (err) {
+            // Already started — ignore DOMException
+            console.warn("Recognition start error:", err);
+        }
     }, []);
 
     const stopListening = useCallback(() => {
         if (!recognitionRef.current) return;
-        recognitionRef.current.stop();
+        try {
+            recognitionRef.current.stop();
+        } catch {
+            // Already stopped — ignore
+        }
         setIsListening(false);
     }, []);
 

@@ -13,6 +13,12 @@ export default function TypingText({ text, speed = 25, onComplete }: TypingTextP
     const [displayed, setDisplayed] = useState("");
     const [isComplete, setIsComplete] = useState(false);
     const indexRef = useRef(0);
+    const onCompleteRef = useRef(onComplete);
+
+    // Keep callback ref stable to avoid re-triggering effect
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
 
     useEffect(() => {
         setDisplayed("");
@@ -26,12 +32,12 @@ export default function TypingText({ text, speed = 25, onComplete }: TypingTextP
             } else {
                 clearInterval(interval);
                 setIsComplete(true);
-                onComplete?.();
+                onCompleteRef.current?.();
             }
         }, speed);
 
         return () => clearInterval(interval);
-    }, [text, speed, onComplete]);
+    }, [text, speed]);
 
     return (
         <span className={styles.typingText}>

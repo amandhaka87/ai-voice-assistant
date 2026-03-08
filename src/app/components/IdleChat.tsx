@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./IdleChat.module.css";
 
 const chatLines: { speaker: number; text: string }[] = [
@@ -32,38 +32,34 @@ interface Bubble {
 
 export default function IdleChat() {
     const [bubbles, setBubbles] = useState<Bubble[]>([]);
-    const [nextId, setNextId] = useState(0);
-
-    const addBubble = useCallback(() => {
-        const line = chatLines[Math.floor(Math.random() * chatLines.length)];
-        const id = nextId;
-        setNextId((prev) => prev + 1);
-        setBubbles((prev) => {
-            const updated = [...prev, { id, speaker: line.speaker, text: line.text }];
-            // Keep only last 3 bubbles
-            return updated.slice(-3);
-        });
-
-        // Auto-remove bubble after 4 seconds
-        setTimeout(() => {
-            setBubbles((prev) => prev.filter((b) => b.id !== id));
-        }, 4000);
-    }, [nextId]);
+    const nextIdRef = useRef(0);
 
     useEffect(() => {
+        const addBubble = () => {
+            const line = chatLines[Math.floor(Math.random() * chatLines.length)];
+            const id = nextIdRef.current++;
+            setBubbles((prev) => {
+                const updated = [...prev, { id, speaker: line.speaker, text: line.text }];
+                return updated.slice(-3);
+            });
+
+            // Auto-remove bubble after 4 seconds
+            setTimeout(() => {
+                setBubbles((prev) => prev.filter((b) => b.id !== id));
+            }, 4000);
+        };
+
         // Show first bubble quickly
-        const initialTimer = setTimeout(() => addBubble(), 1500);
+        const initialTimer = setTimeout(addBubble, 1500);
 
         // Then show bubbles every 3-5 seconds
-        const interval = setInterval(() => {
-            addBubble();
-        }, 3000 + Math.random() * 2000);
+        const interval = setInterval(addBubble, 3500);
 
         return () => {
             clearTimeout(initialTimer);
             clearInterval(interval);
         };
-    }, [addBubble]);
+    }, []);
 
     return (
         <div className={styles.chatOverlay}>

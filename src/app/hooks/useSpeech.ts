@@ -62,6 +62,9 @@ export function useSpeech() {
             };
 
             setTimeout(() => {
+                // Chrome workaround: speech synthesis can get stuck.
+                // Cancel any pending speech and re-queue.
+                window.speechSynthesis.cancel();
                 window.speechSynthesis.speak(utterance);
             }, delay);
         },
