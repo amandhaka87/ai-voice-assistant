@@ -1,0 +1,124 @@
+.chatOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ===== Bubble Base ===== */
+.bubble {
+    position: absolute;
+    top: -10px;
+    max-width: 260px;
+    padding: 0.75rem 1.2rem;
+    border-radius: 16px 16px 16px 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    animation: bubbleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        bubbleFadeOut 0.5s ease-in 3.5s forwards;
+    opacity: 0;
+    transform: scale(0.6) translateY(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===== Bubble Tail ===== */
+.bubbleTail {
+    position: absolute;
+    bottom: -8px;
+    left: 16px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 10px solid rgba(16, 163, 127, 0.2);
+}
+
+/* ===== Brand Variants ===== */
+.bubbleOpenai {
+    background: rgba(16, 163, 127, 0.15);
+    color: #6ee7c0;
+    box-shadow: 0 4px 20px rgba(16, 163, 127, 0.15), 0 0 8px rgba(16, 163, 127, 0.1);
+}
+
+.bubbleOpenai .bubbleTail {
+    border-top-color: rgba(16, 163, 127, 0.15);
+}
+
+.bubbleGemini {
+    background: rgba(66, 133, 244, 0.15);
+    color: #8ab4f8;
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: 0 4px 20px rgba(66, 133, 244, 0.15), 0 0 8px rgba(66, 133, 244, 0.1);
+}
+
+.bubbleGemini .bubbleTail {
+    border-top-color: rgba(66, 133, 244, 0.15);
+}
+
+.bubbleClaude {
+    background: rgba(224, 122, 74, 0.15);
+    color: #f0a882;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 4px 20px rgba(224, 122, 74, 0.15), 0 0 8px rgba(224, 122, 74, 0.1);
+}
+
+.bubbleClaude .bubbleTail {
+    left: auto;
+    right: 16px;
+    border-left: 4px solid transparent;
+    border-right: 8px solid transparent;
+    border-top-color: rgba(224, 122, 74, 0.15);
+}
+
+/* ===== Positions above each card ===== */
+.posLeft {
+    left: 5%;
+}
+
+.posCenter {
+    left: 50%;
+    transform-origin: center bottom;
+}
+
+.posRight {
+    right: 5%;
+    left: auto;
+}
+
+/* ===== Bubble Text ===== */
+.bubbleText {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== Animations ===== */
+@keyframes bubbleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes bubbleFadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.8) translateY(-15px);
+    }
+}

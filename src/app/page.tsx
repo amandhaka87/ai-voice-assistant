@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import Robot from "./components/Robot";
+import IdleChat from "./components/IdleChat";
 
 const agents = [
   {
@@ -35,17 +36,20 @@ export default function Home() {
       <main className={styles.container}>
         <h1 className={styles.title}>Choose Your AI Assistant</h1>
 
-        <div className={styles.grid}>
-          {agents.map((agent) => (
-            <div key={agent.id} className={`${styles.card} ${agent.styleClass}`}>
-              <div className={styles.robotWrapper}>
-                <Robot variant={agent.variant} />
+        <div className={styles.gridWrapper}>
+          <IdleChat />
+          <div className={styles.grid}>
+            {agents.map((agent) => (
+              <div key={agent.id} className={`${styles.card} ${agent.styleClass}`}>
+                <div className={styles.robotWrapper}>
+                  <Robot variant={agent.variant} />
+                </div>
+                <h2 className={styles.name}>{agent.name}</h2>
+                <p className={styles.role}>{agent.role}</p>
+                <div className={styles.status}>{agent.status}</div>
               </div>
-              <h2 className={styles.name}>{agent.name}</h2>
-              <p className={styles.role}>{agent.role}</p>
-              <div className={styles.status}>{agent.status}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </main>
     </>
