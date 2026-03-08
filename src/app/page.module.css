@@ -349,88 +349,138 @@
   text-align: center;
 }
 
-/* ===== Activated Card (walk forward) ===== */
+/* ===== Cinematic Overlay ===== */
+.cinematicOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 2;
+  pointer-events: none;
+  animation: cinematicFadeIn 1s ease forwards;
+}
+
+@keyframes cinematicFadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.titleFaded {
+  opacity: 0.3;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.8s ease;
+}
+
+/* ===== Grid Activated State ===== */
+.gridActivated {
+  z-index: 3;
+}
+
+/* ===== Activated Card Base ===== */
 .cardActivated {
-  animation: walkForward 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
-  z-index: 5;
+  z-index: 10;
+  animation: none !important;
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: rgba(20, 25, 45, 0.95) !important;
 }
 
 .cardActivated::before {
   opacity: 1 !important;
 }
 
+/* ===== Position-Specific Walk-To-Center ===== */
+.activatedLeft {
+  transform: translateX(calc(50% + 1.5rem)) translateY(-40px) scale(1.2) !important;
+}
+
+.activatedCenter {
+  transform: translateY(-40px) scale(1.2) !important;
+}
+
+.activatedRight {
+  transform: translateX(calc(-50% - 1.5rem)) translateY(-40px) scale(1.2) !important;
+}
+
+/* ===== Brand Glow on Activation ===== */
 .cardOpenai.cardActivated {
-  box-shadow: 0 0 60px rgba(16, 163, 127, 0.4), inset 0 0 30px rgba(16, 163, 127, 0.1) !important;
+  box-shadow:
+    0 0 80px rgba(16, 163, 127, 0.5),
+    0 0 120px rgba(16, 163, 127, 0.2),
+    inset 0 0 40px rgba(16, 163, 127, 0.1) !important;
 }
 
 .cardOpenai.cardActivated::before {
-  background: linear-gradient(135deg, #10a37f, transparent) !important;
+  background: linear-gradient(135deg, #10a37f, rgba(16, 163, 127, 0.3), transparent) !important;
 }
 
 .cardOpenai.cardActivated .name {
   color: #10a37f;
-  text-shadow: 0 0 20px rgba(16, 163, 127, 0.8);
+  text-shadow: 0 0 25px rgba(16, 163, 127, 0.9);
 }
 
 .cardGemini.cardActivated {
-  box-shadow: 0 0 60px rgba(66, 133, 244, 0.4), inset 0 0 30px rgba(66, 133, 244, 0.1) !important;
+  box-shadow:
+    0 0 80px rgba(66, 133, 244, 0.5),
+    0 0 120px rgba(66, 133, 244, 0.2),
+    inset 0 0 40px rgba(66, 133, 244, 0.1) !important;
 }
 
 .cardGemini.cardActivated::before {
-  background: linear-gradient(135deg, #4285f4, transparent) !important;
+  background: linear-gradient(135deg, #4285f4, rgba(66, 133, 244, 0.3), transparent) !important;
 }
 
 .cardGemini.cardActivated .name {
   color: #4285f4;
-  text-shadow: 0 0 20px rgba(66, 133, 244, 0.8);
+  text-shadow: 0 0 25px rgba(66, 133, 244, 0.9);
 }
 
 .cardClaude.cardActivated {
-  box-shadow: 0 0 60px rgba(224, 122, 74, 0.4), inset 0 0 30px rgba(224, 122, 74, 0.1) !important;
+  box-shadow:
+    0 0 80px rgba(224, 122, 74, 0.5),
+    0 0 120px rgba(224, 122, 74, 0.2),
+    inset 0 0 40px rgba(224, 122, 74, 0.1) !important;
 }
 
 .cardClaude.cardActivated::before {
-  background: linear-gradient(135deg, #e07a4a, transparent) !important;
+  background: linear-gradient(135deg, #e07a4a, rgba(224, 122, 74, 0.3), transparent) !important;
 }
 
 .cardClaude.cardActivated .name {
   color: #e07a4a;
-  text-shadow: 0 0 20px rgba(224, 122, 74, 0.8);
+  text-shadow: 0 0 25px rgba(224, 122, 74, 0.9);
 }
 
+/* ===== Activated Status Badge ===== */
 .statusActivated {
   animation: statusPulse 1.5s ease-in-out infinite !important;
 }
 
 .cardOpenai .statusActivated {
-  background: rgba(16, 163, 127, 0.2) !important;
+  background: rgba(16, 163, 127, 0.25) !important;
   border-color: #10a37f !important;
   color: #10a37f !important;
-  box-shadow: 0 0 20px rgba(16, 163, 127, 0.5) !important;
+  box-shadow: 0 0 25px rgba(16, 163, 127, 0.6) !important;
 }
 
 .cardGemini .statusActivated {
-  background: rgba(66, 133, 244, 0.2) !important;
+  background: rgba(66, 133, 244, 0.25) !important;
   border-color: #4285f4 !important;
   color: #4285f4 !important;
-  box-shadow: 0 0 20px rgba(66, 133, 244, 0.5) !important;
+  box-shadow: 0 0 25px rgba(66, 133, 244, 0.6) !important;
 }
 
 .cardClaude .statusActivated {
-  background: rgba(224, 122, 74, 0.2) !important;
+  background: rgba(224, 122, 74, 0.25) !important;
   border-color: #e07a4a !important;
   color: #e07a4a !important;
-  box-shadow: 0 0 20px rgba(224, 122, 74, 0.5) !important;
-}
-
-@keyframes walkForward {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-
-  100% {
-    transform: translateY(-30px) scale(1.08);
-  }
+  box-shadow: 0 0 25px rgba(224, 122, 74, 0.6) !important;
 }
 
 @keyframes statusPulse {
@@ -441,16 +491,25 @@
   }
 
   50% {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 }
 
-/* ===== Faded Card (inactive) ===== */
+/* ===== Faded Card (move to background) ===== */
 .cardFaded {
-  opacity: 0.3;
-  filter: grayscale(0.6) brightness(0.6);
-  transform: scale(0.95) !important;
+  opacity: 0.15;
+  filter: grayscale(0.8) brightness(0.4) blur(2px);
+  transform: scale(0.75) translateY(30px) !important;
   animation: none !important;
   pointer-events: none;
-  transition: all 0.6s ease;
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Push faded cards further apart from center */
+.fadedLeft {
+  transform: scale(0.75) translateX(-40px) translateY(30px) !important;
+}
+
+.fadedRight {
+  transform: scale(0.75) translateX(40px) translateY(30px) !important;
 }

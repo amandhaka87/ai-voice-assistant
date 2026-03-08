@@ -24,6 +24,7 @@ const agents = [
         status: "Online",
         variant: "openai" as const,
         styleClass: styles.cardOpenai,
+        position: "left" as const,
     },
     {
         id: "gemini",
@@ -32,6 +33,7 @@ const agents = [
         status: "Ready",
         variant: "gemini" as const,
         styleClass: styles.cardGemini,
+        position: "center" as const,
     },
     {
         id: "claude",
@@ -40,8 +42,21 @@ const agents = [
         status: "Active",
         variant: "claude" as const,
         styleClass: styles.cardClaude,
+        position: "right" as const,
     },
 ];
+
+const positionActiveClass = {
+    left: styles.activatedLeft,
+    center: styles.activatedCenter,
+    right: styles.activatedRight,
+};
+
+const positionFadedClass = {
+    left: styles.fadedLeft,
+    center: "",
+    right: styles.fadedRight,
+};
 
 export default function HomePage() {
     const [apiKey, setApiKey] = useState("");
@@ -51,8 +66,13 @@ export default function HomePage() {
     return (
         <>
             <div className={styles.bgGrid}></div>
+            {/* Cinematic vignette overlay when activated */}
+            {!isIdle && <div className={styles.cinematicOverlay} />}
+
             <main className={styles.container}>
-                <h1 className={styles.title}>Choose Your AI Assistant</h1>
+                <h1 className={`${styles.title} ${!isIdle ? styles.titleFaded : ""}`}>
+                    Choose Your AI Assistant
+                </h1>
 
                 {/* API Key Input */}
                 <div className={styles.inputWrapper}>
@@ -92,11 +112,13 @@ export default function HomePage() {
                         )}
                     </div>
                     {!detectedProvider && apiKey.length > 3 && (
-                        <p className={styles.inputHint}>Unrecognized key format. Supported: OpenAI (sk-), Gemini (AIza), Claude (sk-ant-)</p>
+                        <p className={styles.inputHint}>
+                            Unrecognized key format. Supported: OpenAI (sk-), Gemini (AIza), Claude (sk-ant-)
+                        </p>
                     )}
                 </div>
 
-                <div className={styles.gridWrapper}>
+                <div className={`${styles.gridWrapper} ${!isIdle ? styles.gridActivated : ""}`}>
                     {isIdle && <IdleChat />}
                     <div className={styles.grid}>
                         {agents.map((agent) => {
@@ -106,8 +128,9 @@ export default function HomePage() {
                             return (
                                 <div
                                     key={agent.id}
-                                    className={`${styles.card} ${agent.styleClass} ${isActive ? styles.cardActivated : ""
-                                        } ${isFaded ? styles.cardFaded : ""}`}
+                                    className={`${styles.card} ${agent.styleClass} ${isActive ? `${styles.cardActivated} ${positionActiveClass[agent.position]}` : ""
+                                        } ${isFaded ? `${styles.cardFaded} ${positionFadedClass[agent.position]}` : ""
+                                        }`}
                                 >
                                     <div className={styles.robotWrapper}>
                                         <Robot variant={agent.variant} />
