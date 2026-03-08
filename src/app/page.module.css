@@ -513,3 +513,208 @@
 .fadedRight {
   transform: scale(0.75) translateX(40px) translateY(30px) !important;
 }
+
+/* ===== Voice Chat Section ===== */
+.chatSection {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 4;
+}
+
+.chatLog {
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(10, 12, 25, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.chatBubble {
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  max-width: 85%;
+  animation: chatSlideIn 0.3s ease;
+}
+
+@keyframes chatSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatUser {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.chatAi {
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.chatRole {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(139, 155, 180, 0.6);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.chatText {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.liveTranscript {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+
+.liveLabel {
+  font-size: 1.2rem;
+}
+
+@keyframes livePulse {
+
+  0%,
+  100% {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  50% {
+    border-color: rgba(0, 240, 255, 0.4);
+  }
+}
+
+.chatError {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 60, 60, 0.1);
+  border: 1px solid rgba(255, 60, 60, 0.3);
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ===== Mic Button ===== */
+.micButton {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(10, 12, 25, 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+
+.micButton:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.micButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.micIcon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.micIconSpin {
+  font-size: 1.6rem;
+  line-height: 1;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Listening state */
+.micListening {
+  border-color: #ff4444 !important;
+  box-shadow: 0 0 30px rgba(255, 68, 68, 0.3) !important;
+  animation: micPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(255, 68, 68, 0.5);
+  }
+}
+
+/* Speaking state */
+.micSpeaking {
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.2) !important;
+}
+
+/* Loading state */
+.micLoading {
+  border-color: rgba(255, 200, 0, 0.4) !important;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.15) !important;
+}
+
+.micHint {
+  font-size: 0.75rem;
+  color: rgba(139, 155, 180, 0.6);
+  text-align: center;
+  margin: 0;
+}

@@ -29,20 +29,18 @@ export function useSpeech() {
         setIsMouthOpen(false);
     }, []);
 
-    const speak = useCallback(
-        (provider: string) => {
+    const speakText = useCallback(
+        (text: string, delay = 0) => {
             if (typeof window === "undefined") return;
 
             stopSpeaking();
 
-            const text = greetings[provider] || "Hello, I am ready to assist you!";
             const utterance = new SpeechSynthesisUtterance(text);
             utteranceRef.current = utterance;
 
             utterance.rate = 0.95;
             utterance.pitch = 1.05;
 
-            // Use onboundary for word-level mouth sync
             utterance.onboundary = () => {
                 setIsMouthOpen(true);
                 setTimeout(() => setIsMouthOpen(false), 120);
@@ -50,7 +48,6 @@ export function useSpeech() {
 
             utterance.onstart = () => {
                 setIsSpeaking(true);
-                // Fallback: toggle mouth rapidly if onboundary doesn't fire
                 intervalRef.current = setInterval(() => {
                     setIsMouthOpen((prev) => !prev);
                 }, 150);
@@ -64,13 +61,20 @@ export function useSpeech() {
                 stopSpeaking();
             };
 
-            // Small delay for cinematic feel
             setTimeout(() => {
                 window.speechSynthesis.speak(utterance);
-            }, 600);
+            }, delay);
         },
         [stopSpeaking]
     );
 
-    return { isSpeaking, isMouthOpen, speak, stopSpeaking };
+    const speakGreeting = useCallback(
+        (provider: string) => {
+            const text = greetings[provider] || "Hello, I am ready to assist you!";
+            speakText(text, 600);
+        },
+        [speakText]
+    );
+
+    return { isSpeaking, isMouthOpen, speakText, speakGreeting, stopSpeaking };
 }

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import styles from "../page.module.css";
 import Robot from "./Robot";
 import IdleChat from "./IdleChat";
 import { useSpeech } from "../hooks/useSpeech";
+import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 type Provider = "openai" | "gemini" | "claude" | null;
 
@@ -63,19 +64,96 @@ export default function HomePage() {
     const [apiKey, setApiKey] = useState("");
     const detectedProvider = useMemo(() => detectProvider(apiKey), [apiKey]);
     const isIdle = detectedProvider === null;
-    const { isSpeaking, isMouthOpen, speak, stopSpeaking } = useSpeech();
+    const { isSpeaking, speakText, speakGreeting, stopSpeaking } = useSpeech();
+    const {
+        isListening,
+        transcript,
+        interimTranscript,
+        startListening,
+        stopListening,
+        isSupported,
+        setTranscript,
+    } = useSpeechRecognition();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [chatLog, setChatLog] = useState<{ role: "user" | "ai"; text: string }[]>([]);
+    const [error, setError] = useState("");
     const prevProviderRef = useRef<Provider>(null);
+    const chatEndRef = useRef<HTMLDivElement>(null);
 
     // Auto-speak greeting when a new provider is detected
     useEffect(() => {
         if (detectedProvider && detectedProvider !== prevProviderRef.current) {
-            speak(detectedProvider);
+            speakGreeting(detectedProvider);
+            setChatLog([]);
+            setError("");
         }
         if (!detectedProvider && prevProviderRef.current) {
             stopSpeaking();
+            setChatLog([]);
         }
         prevProviderRef.current = detectedProvider;
-    }, [detectedProvider, speak, stopSpeaking]);
+    }, [detectedProvider, speakGreeting, stopSpeaking]);
+
+    // Scroll chat to bottom
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [chatLog]);
+
+    // Send message to AI when transcript finalizes
+    const sendMessage = useCallback(
+        async (text: string) => {
+            if (!text.trim() || !apiKey) return;
+
+            setChatLog((prev) => [...prev, { role: "user", text }]);
+            setTranscript("");
+            setIsLoading(true);
+            setError("");
+
+            try {
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text, apiKey }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    setError(data.error || "Something went wrong.");
+                    setIsLoading(false);
+                    return;
+                }
+
+                setChatLog((prev) => [...prev, { role: "ai", text: data.response }]);
+                speakText(data.response);
+            } catch {
+                setError("Failed to connect. Please check your connection.");
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [apiKey, speakText, setTranscript]
+    );
+
+    // Auto-send when speech recognition finishes with a transcript
+    useEffect(() => {
+        if (!isListening && transcript && !isLoading) {
+            sendMessage(transcript);
+        }
+    }, [isListening, transcript, isLoading, sendMessage]);
+
+    const handleMicClick = () => {
+        if (isSpeaking) {
+            stopSpeaking();
+            return;
+        }
+        if (isListening) {
+            stopListening();
+        } else {
+            startListening();
+        }
+    };
 
     return (
         <>
@@ -110,12 +188,14 @@ export default function HomePage() {
                             spellCheck={false}
                         />
                         {detectedProvider && (
-                            <div className={`${styles.detectedBadge} ${detectedProvider === "openai"
-                                    ? styles.badgeOpenai
-                                    : detectedProvider === "gemini"
-                                        ? styles.badgeGemini
-                                        : styles.badgeClaude
-                                }`}>
+                            <div
+                                className={`${styles.detectedBadge} ${detectedProvider === "openai"
+                                        ? styles.badgeOpenai
+                                        : detectedProvider === "gemini"
+                                            ? styles.badgeGemini
+                                            : styles.badgeClaude
+                                    }`}
+                            >
                                 {detectedProvider === "openai"
                                     ? "OpenAI Detected"
                                     : detectedProvider === "gemini"
@@ -137,12 +217,13 @@ export default function HomePage() {
                         {agents.map((agent) => {
                             const isActive = detectedProvider === agent.id;
                             const isFaded = detectedProvider !== null && !isActive;
-                            const robotTalking = isActive && isSpeaking && isMouthOpen;
 
                             return (
                                 <div
                                     key={agent.id}
-                                    className={`${styles.card} ${agent.styleClass} ${isActive ? `${styles.cardActivated} ${positionActiveClass[agent.position]}` : ""
+                                    className={`${styles.card} ${agent.styleClass} ${isActive
+                                            ? `${styles.cardActivated} ${positionActiveClass[agent.position]}`
+                                            : ""
                                         } ${isFaded ? `${styles.cardFaded} ${positionFadedClass[agent.position]}` : ""}`}
                                 >
                                     <div className={styles.robotWrapper}>
@@ -151,13 +232,98 @@ export default function HomePage() {
                                     <h2 className={styles.name}>{agent.name}</h2>
                                     <p className={styles.role}>{agent.role}</p>
                                     <div className={`${styles.status} ${isActive ? styles.statusActivated : ""}`}>
-                                        {isActive && isSpeaking ? "🔊 Speaking..." : isActive ? "✦ Activated" : agent.status}
+                                        {isActive && isSpeaking
+                                            ? "🔊 Speaking..."
+                                            : isActive && isListening
+                                                ? "🎙️ Listening..."
+                                                : isActive && isLoading
+                                                    ? "🤔 Thinking..."
+                                                    : isActive
+                                                        ? "✦ Activated"
+                                                        : agent.status}
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
+
+                {/* Voice Chat Interface */}
+                {detectedProvider && (
+                    <div className={styles.chatSection}>
+                        {/* Chat Log */}
+                        {chatLog.length > 0 && (
+                            <div className={styles.chatLog}>
+                                {chatLog.map((entry, i) => (
+                                    <div
+                                        key={i}
+                                        className={`${styles.chatBubble} ${entry.role === "user" ? styles.chatUser : styles.chatAi
+                                            }`}
+                                    >
+                                        <span className={styles.chatRole}>
+                                            {entry.role === "user" ? "You" : detectedProvider.toUpperCase()}
+                                        </span>
+                                        <p className={styles.chatText}>{entry.text}</p>
+                                    </div>
+                                ))}
+                                <div ref={chatEndRef} />
+                            </div>
+                        )}
+
+                        {/* Live transcript */}
+                        {(interimTranscript || (isListening && !transcript)) && (
+                            <div className={styles.liveTranscript}>
+                                <span className={styles.liveLabel}>🎙️</span>
+                                <span>{interimTranscript || "Listening..."}</span>
+                            </div>
+                        )}
+
+                        {/* Error */}
+                        {error && <div className={styles.chatError}>{error}</div>}
+
+                        {/* Mic Button */}
+                        <button
+                            className={`${styles.micButton} ${isListening
+                                    ? styles.micListening
+                                    : isSpeaking
+                                        ? styles.micSpeaking
+                                        : isLoading
+                                            ? styles.micLoading
+                                            : ""
+                                }`}
+                            onClick={handleMicClick}
+                            disabled={!isSupported}
+                            title={
+                                !isSupported
+                                    ? "Speech recognition not supported"
+                                    : isListening
+                                        ? "Stop listening"
+                                        : isSpeaking
+                                            ? "Stop speaking"
+                                            : "Hold to speak"
+                            }
+                        >
+                            {isListening ? (
+                                <span className={styles.micIcon}>⏹</span>
+                            ) : isSpeaking ? (
+                                <span className={styles.micIcon}>🔇</span>
+                            ) : isLoading ? (
+                                <span className={styles.micIconSpin}>⟳</span>
+                            ) : (
+                                <span className={styles.micIcon}>🎤</span>
+                            )}
+                        </button>
+                        <p className={styles.micHint}>
+                            {isListening
+                                ? "Speak now... click to stop"
+                                : isSpeaking
+                                    ? "AI is speaking... click to stop"
+                                    : isLoading
+                                        ? "Thinking..."
+                                        : "Click to start talking"}
+                        </p>
+                    </div>
+                )}
             </main>
         </>
     );
