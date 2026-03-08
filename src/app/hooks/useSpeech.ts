@@ -2,14 +2,8 @@
 
 import { useState, useCallback, useRef } from "react";
 
-const greetings: Record<string, string> = {
-    openai:
-        "Hello! I'm your OpenAI assistant. I can help you with code, writing, and complex reasoning tasks. What would you like to work on today?",
-    gemini:
-        "Hi there! I'm Gemini, your multimodal AI. I can search, analyze, and understand across text, images, and more. How can I assist you?",
-    claude:
-        "Hey! I'm Claude, and I'm here to help with thoughtful conversation and careful research. Tell me what's on your mind!",
-};
+const GREETING =
+    "Hello! I'm your AI assistant. I can help you with questions, ideas, and conversation. What would you like to talk about?";
 
 export function useSpeech() {
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -62,8 +56,6 @@ export function useSpeech() {
             };
 
             setTimeout(() => {
-                // Chrome workaround: speech synthesis can get stuck.
-                // Cancel any pending speech and re-queue.
                 window.speechSynthesis.cancel();
                 window.speechSynthesis.speak(utterance);
             }, delay);
@@ -71,13 +63,9 @@ export function useSpeech() {
         [stopSpeaking]
     );
 
-    const speakGreeting = useCallback(
-        (provider: string) => {
-            const text = greetings[provider] || "Hello, I am ready to assist you!";
-            speakText(text, 600);
-        },
-        [speakText]
-    );
+    const speakGreeting = useCallback(() => {
+        speakText(GREETING, 600);
+    }, [speakText]);
 
     return { isSpeaking, isMouthOpen, speakText, speakGreeting, stopSpeaking };
 }
