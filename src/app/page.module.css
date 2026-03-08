@@ -215,3 +215,242 @@
   mask-image: radial-gradient(circle at top center, black 10%, transparent 80%);
   -webkit-mask-image: radial-gradient(circle at top center, black 10%, transparent 80%);
 }
+
+/* ===== API Key Input ===== */
+.inputWrapper {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  font-size: 1.2rem;
+  z-index: 2;
+  transition: transform 0.4s ease;
+}
+
+.inputIconActive {
+  transform: scale(1.2);
+  animation: unlockBounce 0.5s ease;
+}
+
+@keyframes unlockBounce {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4) rotate(-10deg);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.apiInput {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 12, 25, 0.8);
+  color: var(--text-light);
+  font-size: 0.95rem;
+  font-family: 'Inter', monospace;
+  outline: none;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.5px;
+}
+
+.apiInput::placeholder {
+  color: rgba(139, 155, 180, 0.5);
+  font-size: 0.85rem;
+}
+
+.apiInput:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.inputGlowOpenai {
+  border-color: rgba(16, 163, 127, 0.6) !important;
+  box-shadow: 0 0 20px rgba(16, 163, 127, 0.2), 0 0 40px rgba(16, 163, 127, 0.1) !important;
+}
+
+.inputGlowGemini {
+  border-color: rgba(66, 133, 244, 0.6) !important;
+  box-shadow: 0 0 20px rgba(66, 133, 244, 0.2), 0 0 40px rgba(66, 133, 244, 0.1) !important;
+}
+
+.inputGlowClaude {
+  border-color: rgba(224, 122, 74, 0.6) !important;
+  box-shadow: 0 0 20px rgba(224, 122, 74, 0.2), 0 0 40px rgba(224, 122, 74, 0.1) !important;
+}
+
+.detectedBadge {
+  position: absolute;
+  right: 12px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: badgeSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.badgeOpenai {
+  background: rgba(16, 163, 127, 0.2);
+  color: #10a37f;
+  border: 1px solid rgba(16, 163, 127, 0.4);
+}
+
+.badgeGemini {
+  background: rgba(66, 133, 244, 0.2);
+  color: #4285f4;
+  border: 1px solid rgba(66, 133, 244, 0.4);
+}
+
+.badgeClaude {
+  background: rgba(224, 122, 74, 0.2);
+  color: #e07a4a;
+  border: 1px solid rgba(224, 122, 74, 0.4);
+}
+
+@keyframes badgeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(10px) scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.inputHint {
+  font-size: 0.75rem;
+  color: rgba(255, 150, 100, 0.7);
+  text-align: center;
+}
+
+/* ===== Activated Card (walk forward) ===== */
+.cardActivated {
+  animation: walkForward 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  z-index: 5;
+}
+
+.cardActivated::before {
+  opacity: 1 !important;
+}
+
+.cardOpenai.cardActivated {
+  box-shadow: 0 0 60px rgba(16, 163, 127, 0.4), inset 0 0 30px rgba(16, 163, 127, 0.1) !important;
+}
+
+.cardOpenai.cardActivated::before {
+  background: linear-gradient(135deg, #10a37f, transparent) !important;
+}
+
+.cardOpenai.cardActivated .name {
+  color: #10a37f;
+  text-shadow: 0 0 20px rgba(16, 163, 127, 0.8);
+}
+
+.cardGemini.cardActivated {
+  box-shadow: 0 0 60px rgba(66, 133, 244, 0.4), inset 0 0 30px rgba(66, 133, 244, 0.1) !important;
+}
+
+.cardGemini.cardActivated::before {
+  background: linear-gradient(135deg, #4285f4, transparent) !important;
+}
+
+.cardGemini.cardActivated .name {
+  color: #4285f4;
+  text-shadow: 0 0 20px rgba(66, 133, 244, 0.8);
+}
+
+.cardClaude.cardActivated {
+  box-shadow: 0 0 60px rgba(224, 122, 74, 0.4), inset 0 0 30px rgba(224, 122, 74, 0.1) !important;
+}
+
+.cardClaude.cardActivated::before {
+  background: linear-gradient(135deg, #e07a4a, transparent) !important;
+}
+
+.cardClaude.cardActivated .name {
+  color: #e07a4a;
+  text-shadow: 0 0 20px rgba(224, 122, 74, 0.8);
+}
+
+.statusActivated {
+  animation: statusPulse 1.5s ease-in-out infinite !important;
+}
+
+.cardOpenai .statusActivated {
+  background: rgba(16, 163, 127, 0.2) !important;
+  border-color: #10a37f !important;
+  color: #10a37f !important;
+  box-shadow: 0 0 20px rgba(16, 163, 127, 0.5) !important;
+}
+
+.cardGemini .statusActivated {
+  background: rgba(66, 133, 244, 0.2) !important;
+  border-color: #4285f4 !important;
+  color: #4285f4 !important;
+  box-shadow: 0 0 20px rgba(66, 133, 244, 0.5) !important;
+}
+
+.cardClaude .statusActivated {
+  background: rgba(224, 122, 74, 0.2) !important;
+  border-color: #e07a4a !important;
+  color: #e07a4a !important;
+  box-shadow: 0 0 20px rgba(224, 122, 74, 0.5) !important;
+}
+
+@keyframes walkForward {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(-30px) scale(1.08);
+  }
+}
+
+@keyframes statusPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ===== Faded Card (inactive) ===== */
+.cardFaded {
+  opacity: 0.3;
+  filter: grayscale(0.6) brightness(0.6);
+  transform: scale(0.95) !important;
+  animation: none !important;
+  pointer-events: none;
+  transition: all 0.6s ease;
+}
