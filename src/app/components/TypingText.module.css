@@ -1,0 +1,24 @@
+.typingText {
+    display: inline;
+}
+
+.cursor {
+    display: inline-block;
+    color: var(--neon-cyan);
+    animation: blink 0.7s step-end infinite;
+    margin-left: 1px;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}

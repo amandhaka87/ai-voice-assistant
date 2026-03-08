@@ -4,8 +4,10 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import styles from "../page.module.css";
 import Robot from "./Robot";
 import IdleChat from "./IdleChat";
+import TypingText from "./TypingText";
 import { useSpeech } from "../hooks/useSpeech";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
+import { useSoundEffects } from "../hooks/useSoundEffects";
 
 type Provider = "openai" | "gemini" | "claude" | null;
 
@@ -74,6 +76,7 @@ export default function HomePage() {
         isSupported,
         setTranscript,
     } = useSpeechRecognition();
+    const sfx = useSoundEffects();
 
     const [isLoading, setIsLoading] = useState(false);
     const [chatLog, setChatLog] = useState<{ role: "user" | "ai"; text: string }[]>([]);
@@ -81,9 +84,10 @@ export default function HomePage() {
     const prevProviderRef = useRef<Provider>(null);
     const chatEndRef = useRef<HTMLDivElement>(null);
 
-    // Auto-speak greeting when a new provider is detected
+    // Auto-speak greeting + play activation sound
     useEffect(() => {
         if (detectedProvider && detectedProvider !== prevProviderRef.current) {
+            sfx.playActivation();
             speakGreeting(detectedProvider);
             setChatLog([]);
             setError("");
@@ -93,18 +97,19 @@ export default function HomePage() {
             setChatLog([]);
         }
         prevProviderRef.current = detectedProvider;
-    }, [detectedProvider, speakGreeting, stopSpeaking]);
+    }, [detectedProvider, speakGreeting, stopSpeaking, sfx]);
 
     // Scroll chat to bottom
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [chatLog]);
 
-    // Send message to AI when transcript finalizes
+    // Send message to AI
     const sendMessage = useCallback(
         async (text: string) => {
             if (!text.trim() || !apiKey) return;
 
+            sfx.playMessageSent();
             setChatLog((prev) => [...prev, { role: "user", text }]);
             setTranscript("");
             setIsLoading(true);
@@ -125,6 +130,7 @@ export default function HomePage() {
                     return;
                 }
 
+                sfx.playResponseReceived();
                 setChatLog((prev) => [...prev, { role: "ai", text: data.response }]);
                 speakText(data.response);
             } catch {
@@ -133,7 +139,7 @@ export default function HomePage() {
                 setIsLoading(false);
             }
         },
-        [apiKey, speakText, setTranscript]
+        [apiKey, speakText, setTranscript, sfx]
     );
 
     // Auto-send when speech recognition finishes with a transcript
@@ -149,8 +155,10 @@ export default function HomePage() {
             return;
         }
         if (isListening) {
+            sfx.playMicOff();
             stopListening();
         } else {
+            sfx.playMicOn();
             startListening();
         }
     };
@@ -158,12 +166,25 @@ export default function HomePage() {
     return (
         <>
             <div className={styles.bgGrid}></div>
+            {/* Scan lines overlay */}
+            <div className={styles.scanLines} />
+            {/* HUD corners */}
+            <div className={`${styles.hudCorner} ${styles.hudTL}`} />
+            <div className={`${styles.hudCorner} ${styles.hudTR}`} />
+            <div className={`${styles.hudCorner} ${styles.hudBL}`} />
+            <div className={`${styles.hudCorner} ${styles.hudBR}`} />
+
             {!isIdle && <div className={styles.cinematicOverlay} />}
 
             <main className={styles.container}>
                 <h1 className={`${styles.title} ${!isIdle ? styles.titleFaded : ""}`}>
                     Choose Your AI Assistant
                 </h1>
+                <p className={styles.subtitle}>
+                    {isIdle
+                        ? "Paste an API key to activate an assistant"
+                        : `${detectedProvider?.toUpperCase()} active • Voice assistant ready`}
+                </p>
 
                 {/* API Key Input */}
                 <div className={styles.inputWrapper}>
@@ -263,7 +284,13 @@ export default function HomePage() {
                                         <span className={styles.chatRole}>
                                             {entry.role === "user" ? "You" : detectedProvider.toUpperCase()}
                                         </span>
-                                        <p className={styles.chatText}>{entry.text}</p>
+                                        {entry.role === "ai" && i === chatLog.length - 1 ? (
+                                            <p className={styles.chatText}>
+                                                <TypingText text={entry.text} speed={20} />
+                                            </p>
+                                        ) : (
+                                            <p className={styles.chatText}>{entry.text}</p>
+                                        )}
                                     </div>
                                 ))}
                                 <div ref={chatEndRef} />
@@ -300,7 +327,7 @@ export default function HomePage() {
                                         ? "Stop listening"
                                         : isSpeaking
                                             ? "Stop speaking"
-                                            : "Hold to speak"
+                                            : "Click to speak"
                             }
                         >
                             {isListening ? (
